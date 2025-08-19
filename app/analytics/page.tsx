@@ -1,10 +1,10 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { FileText, Sparkles, X } from 'lucide-react'
 
-export default function AnalyticsPage() {
+function AnalyticsContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [results, setResults] = useState<any[]>([])
@@ -271,5 +271,24 @@ export default function AnalyticsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function AnalyticsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black/[0.96] antialiased bg-grid-white/[0.02] relative overflow-hidden">
+        <div className="h-full w-full absolute inset-0 z-0"></div>
+        <div className="relative z-10 h-full flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-custom-yellow mx-auto mb-8"></div>
+            <h2 className="text-3xl font-bold text-white mb-4">Loading Analytics...</h2>
+            <p className="text-gray-400 text-lg">Preparing your course insights</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <AnalyticsContent />
+    </Suspense>
   )
 }
