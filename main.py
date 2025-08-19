@@ -11,10 +11,9 @@ from pdfparser import extract_courses_separate_lists
 
 app = FastAPI()
 
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -31,16 +30,12 @@ async def reccomend_courses(request: CourseRequest):
     response_json = engine.recommend_courses_json(request_json)
     response = json.loads(response_json)
     
-    # Extract just the course codes
     course_codes = [rec["course_code"] for rec in response.get("recommendations", [])]
     
     return {"recommendations": course_codes}
 
 @app.post("/recommend-from-courses")
 async def recommend_from_courses(request: CourseRequest):
-    """
-    Get course recommendations based on a list of completed courses
-    """
     try:
         request_json = json.dumps({"completed_courses": request.completed_courses})
         response_json = engine.recommend_courses_json(request_json)
@@ -60,44 +55,33 @@ async def recommend_from_courses(request: CourseRequest):
 
 @app.post("/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...)):
-    """
-    Upload a PDF file and extract course information, then generate recommendations
-    """
     if not file.filename.endswith('.pdf'):
         return {"error": "File must be a PDF"}
     
     try:
-        # Read the PDF content
         contents = await file.read()
         
-        # Save to temporary file for pdfminer processing
         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
             temp_file.write(contents)
             temp_file_path = temp_file.name
         
         try:
-            # Extract text from PDF using pdfminer
             from pdfminer.high_level import extract_text
             extracted_text = extract_text(temp_file_path)
             
-            # Parse courses using your existing function
             course_codes, course_numbers = extract_courses_separate_lists(extracted_text)
             
-            # Create full course names
             full_courses = []
             for i in range(len(course_codes)):
                 if i < len(course_numbers):
                     full_courses.append(course_codes[i] + course_numbers[i])
             
-            # Generate course recommendations using the CourseRecommender
             recommendations = []
             if full_courses:
                 try:
-                    # Create request for CourseRecommender
                     request_data = {"completed_courses": full_courses}
                     request_json = json.dumps(request_data)
                     
-                    # Get recommendations
                     recommendations_json = engine.recommend_courses_json(request_json)
                     recommendations_data = json.loads(recommendations_json)
                     
@@ -110,7 +94,6 @@ async def upload_pdf(file: UploadFile = File(...)):
                     print(f"Error getting recommendations: {rec_error}")
                     recommendations = []
             
-            # Clean up temporary file
             os.unlink(temp_file_path)
             
             return {
@@ -128,7 +111,6 @@ async def upload_pdf(file: UploadFile = File(...)):
             }
             
         except Exception as parse_error:
-            # Clean up temporary file on error
             if os.path.exists(temp_file_path):
                 os.unlink(temp_file_path)
             raise parse_error
@@ -137,4 +119,4 @@ async def upload_pdf(file: UploadFile = File(...)):
         return {"error": f"Error processing PDF: {str(e)}"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=10000)

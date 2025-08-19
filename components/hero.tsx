@@ -85,7 +85,6 @@ export default function Hero() {
   )
 }
 
-// Upload Modal Component
 function UploadModal({ onClose }: { onClose: () => void }) {
   const [isDragOver, setIsDragOver] = useState(false)
   const [files, setFiles] = useState<File[]>([])
@@ -144,7 +143,6 @@ function UploadModal({ onClose }: { onClose: () => void }) {
     
     for (let i = 0; i < steps.length; i++) {
       setProcessingStep(steps[i])
-      // Smoother transitions with longer delays between steps
       await new Promise(resolve => setTimeout(resolve, 800))
     }
   }
@@ -159,10 +157,8 @@ function UploadModal({ onClose }: { onClose: () => void }) {
     setProcessingStep("")
 
     try {
-      // Start the fake processing steps
       simulateProcessingSteps()
       
-      // Wait for 3 seconds total
       await new Promise(resolve => setTimeout(resolve, 3000))
       
       setShowFullScreenLoading(false)
@@ -172,7 +168,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
         const formData = new FormData()
         formData.append('file', file)
 
-        const response = await fetch('http://localhost:8000/upload-pdf', {
+        const response = await fetch('http://localhost:10000/upload-pdf', {
           method: 'POST',
           body: formData,
         })
@@ -190,10 +186,8 @@ function UploadModal({ onClose }: { onClose: () => void }) {
       setUploadResults(results)
       setShowSuccess(true)
       
-      // Store results in localStorage and navigate to analytics page
       localStorage.setItem('analyticsResults', JSON.stringify(results))
       
-      // Show success for 2 seconds, then redirect to analytics page
       setTimeout(() => {
         window.location.href = '/analytics'
       }, 2000)
@@ -219,7 +213,6 @@ function UploadModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-gray-900 border border-gray-700 rounded-2xl p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto relative">
-        {/* Full Screen Loading Overlay */}
         {showFullScreenLoading && (
           <FullScreenLoading processingStep={processingStep} />
         )}
@@ -391,7 +384,6 @@ function UploadModal({ onClose }: { onClose: () => void }) {
   )
 }
 
-// Full Screen Loading Overlay Component
 function FullScreenLoading({ processingStep }: { processingStep: string }) {
   return (
     <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50">

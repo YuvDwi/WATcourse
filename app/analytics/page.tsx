@@ -11,7 +11,6 @@ function AnalyticsContent() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get results from URL params or localStorage
     const resultsParam = searchParams.get('results')
     if (resultsParam) {
       try {
@@ -21,7 +20,6 @@ function AnalyticsContent() {
         console.error('Error parsing results:', e)
       }
     } else {
-      // Fallback to localStorage if no URL params
       const storedResults = localStorage.getItem('analyticsResults')
       if (storedResults) {
         try {
