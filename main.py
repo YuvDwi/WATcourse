@@ -15,7 +15,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -52,6 +52,10 @@ async def recommend_from_courses(request: CourseRequest):
         
     except Exception as e:
         return {"error": f"Error getting recommendations: {str(e)}", "recommendations": []}
+
+@app.options("/upload-pdf")
+async def upload_pdf_options():
+    return {"message": "OK"}
 
 @app.post("/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...)):
@@ -119,4 +123,4 @@ async def upload_pdf(file: UploadFile = File(...)):
         return {"error": f"Error processing PDF: {str(e)}"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=10000)
+    uvicorn.run(app, host="0.0.0.0", port=12000)
