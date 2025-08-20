@@ -168,7 +168,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
         const formData = new FormData()
         formData.append('file', file)
 
-        const response = await fetch('http://localhost:10000/upload-pdf', {
+        const response = await fetch('http://localhost:12000/upload-pdf', {
           method: 'POST',
           body: formData,
         })
