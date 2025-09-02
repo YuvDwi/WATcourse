@@ -1,5 +1,5 @@
 # WATCourse  
-*Smart, data-driven course recommendations for Waterloo students*  
+Creating smart, data-driven course recommendations for Waterloo students  
 
 WATCourse is an open-source recommendation engine that actually helps you pick your next courses instead of leaving you lost in UWFlow rabbit holes or asking random group chats. It reads your transcript, builds a profile of your academic strengths and weaknesses, and then layers in real UWFlow reviews to recommend courses that fit **you**. MIT Licensed, so you can hack on it too.  
 
