@@ -117,5 +117,4 @@ NEXT_PUBLIC_API_URL=http://localhost:12000
 
 - Keep scoring weights configurable in `reccomender.py`
 - Test with real transcripts before merging
-- Make sure UI works on mobile
 - Add error handling for PDF parsing
