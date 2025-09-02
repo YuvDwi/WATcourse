@@ -1,50 +1,30 @@
 # WATCourse
 
-*Data-driven course recommendations for University of Waterloo students*
+*Smart, data-driven course recommendations for Waterloo students*
 
-WATCourse is an open-source recommendation engine that analyzes academic transcripts and generates personalized course suggestions using machine learning. Licensed for open-source use under MIT License.
+WATCourse is an open-source recommendation engine that actually helps you pick your next courses instead of leaving you lost in UWFlow rabbit holes or asking random group chats. It reads your transcript, builds a profile of your academic strengths and weaknesses, and then layers in real UWFlow reviews to recommend courses that fit **you**. MIT Licensed, so you can hack on it too.
 
 ## Why WATCourse
 
-Finding the right courses at Waterloo can be difficult. Suggestions from peers are often generic, and reviews don't always reflect what's challenging for an individual student. WATCourse was built to make course selection smarter by analyzing transcripts directly, identifying academic strengths and weaknesses, and matching them with real student feedback for personalized recommendations.
+Picking courses at Waterloo sucks. Everyone says "just take bird courses," but what's easy for one person might be brutal for someone else. Reviews are helpful, but they're not personalized.
 
-## Features
+That's why WATCourse was built: it looks at your actual transcript, understands what you found difficult versus what you thrived in, and balances "easy GPA boost" with "useful and interesting." It mixes transcript similarity with UWFlow ratings on easiness, usefulness, and how much students liked a course, so recommendations aren't just random popular picks — they're tailored to your strengths and preferences.
 
-- PDF transcript parsing with `pdfminer.six`
-- Academic profile creation via 384D vector embeddings
-- Cosine similarity for course matching (`scikit-learn`, `numpy`)
-- UWFlow review integration using NLP
-- Scoring system that balances similarity with difficulty, usefulness, and satisfaction
-- Department diversity filtering for varied recommendations
-- Privacy-first: transcripts processed locally and deleted immediately
-- Fast results (recommendations in <5 seconds)
+## How the Recommendation Works
 
-## Architecture
+The engine blends **your academic history** with **real student feedback** to give you smart, personalized recs.
 
-**Frontend (Next.js 14 / TypeScript / Tailwind CSS)**
-- Transcript upload + results interface
-- Deployed on Vercel
+First, your transcript is parsed for course codes and grades, then turned into a 384-dimensional "academic profile." Every Waterloo course in the database also has an embedding, and cosine similarity is used to measure which ones align best with your history. From there, review data from UWFlow comes into play — courses aren't just matched by similarity, but also scored by how students rated them in terms of easiness, usefulness, and overall enjoyment. The final ranking combines these signals (roughly 70% similarity, 30% review quality), with a pass that ensures you don't just get ten courses from the same department.
 
-**Backend (FastAPI / Python 3.11)**
-- ML recommendation engine with cosine similarity
-- Transcript parsing with `pdfminer.six`
-- Deployed on Railway
+## Project Architecture
 
-**Data Pipeline**
-- Course database of 916 courses with metadata + embeddings
-- UWFlow reviews processed with NLP
-- Pre-computed embeddings for production efficiency
+WATCourse is split into a frontend and a backend that work together seamlessly. The frontend is built with React using Next.js 14, styled with Tailwind CSS, and deployed on Vercel. This is where students upload their transcript and receive real-time recommendations.
 
-## Execution Flow
+The backend is powered by FastAPI in Python 3.11. It parses transcripts with `pdfminer.six`, computes embeddings, and runs cosine similarity through `numpy` and `scikit-learn` to generate course matches. The backend is hosted on Railway for easy deployment and scaling.
 
-1. Extract transcript text with `pdfminer.six`
-2. Detect course codes and grades via regex
-3. Compute academic profile from completed courses
-4. Match against course database using cosine similarity
-5. Score with quality factors (satisfaction, easiness, usefulness)
-6. Apply department diversity filtering
+All of this is supported by a data pipeline built on a curated database of 916 Waterloo courses enriched with pre-computed embeddings and UWFlow reviews. NLP is applied to student feedback to capture satisfaction, difficulty, and usefulness, ensuring the recommendations feel both accurate and relevant.
 
-## Repository Structure
+## Repo Layout
 
 ```plaintext
 WAT-course/
@@ -73,7 +53,7 @@ WAT-course/
 
 ## Installation
 
-Clone repository and install dependencies:
+Clone and set up:
 
 ```bash
 git clone https://github.com/YuvDwi/WAT-course.git
@@ -87,7 +67,7 @@ npm install
 npm run dev
 ```
 
-Runs at http://localhost:3000.
+Runs at http://localhost:3000
 
 ### Backend
 
@@ -96,46 +76,46 @@ pip install -r requirements.txt
 python3 main.py
 ```
 
-API runs at http://localhost:12000.
+Runs at http://localhost:12000
 
-Set `.env.local` in frontend:
+### Frontend Config
 
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:12000
 ```
 
-## Development Commands
+## Dev Commands
 
 ### Frontend
 
-- `npm run dev` – start Next.js frontend
+- `npm run dev` – start local frontend
 - `npm run build` – production build
 
 ### Backend
 
-- `python3 main.py` – start FastAPI server
+- `python3 main.py` – start API server
 
-### Data & Embeddings
+### Embeddings
 
-- `python3 generate_embeddings.py` – regenerate embeddings
+- `python3 generate_embeddings.py` – regenerate vectors
 
 ## Deployment
 
 ### Frontend (Vercel)
 
 1. Connect GitHub repo
-2. Set `NEXT_PUBLIC_API_URL` env variable
-3. Auto-deploy on push to main
+2. Add `NEXT_PUBLIC_API_URL`
+3. Auto-deploy on push
 
 ### Backend (Railway)
 
 1. Connect GitHub repo
 2. Start command: `python3 main.py`
-3. Specify Python version in runtime.txt
+3. Python version via runtime.txt
 
-## Development Guidelines
+## Dev Guidelines
 
-- Keep ML weights/scoring configurable in `reccomender.py`
-- Test changes on transcripts before merging
-- Ensure responsive frontend for student use
+- Keep scoring weights configurable in `reccomender.py`
+- Test with real transcripts before merging
+- Make sure UI works on mobile
 - Add error handling for PDF parsing
