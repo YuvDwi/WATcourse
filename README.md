@@ -1,3 +1,5 @@
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/6079d0e8-593b-41a9-bb3e-837e516f50f1" />
+
 # WATCourse
 
 Building smart, data-driven course recommendations for Waterloo students.
