@@ -42,6 +42,3 @@ The engine blends **your academic history** with **real student feedback** to gi
 - Sub-5s recommendations  
 
 ---
-
-## Architecture
-**Frontend (Next.js 14 / TypeScript / Tailw**
